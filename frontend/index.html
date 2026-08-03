@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en" id="theme-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Churn Predictor</title>
+    <style>
+        /* ============================================
+           CSS VARIABLES - LIGHT THEME (Default)
+           ============================================ */
+        :root {
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #1a202c;
+            --text-secondary: #4a5568;
+            --border: #e2e8f0;
+            --shadow: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.15);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --gradient-start: #0ea5e9;
+            --gradient-end: #6366f1;
+            --input-bg: #f8fafc;
+            --rec-bg: #f0fdf4;
+            --rec-border: #22c55e;
+            --rec-text: #15803d;
+            --error-bg: #fee2e2;
+            --error-text: #dc2626;
+            --preset-bg: #f1f5f9;
+            --toggle-bg: #e2e8f0;
+        }
+
+        /* ============================================
+           CSS VARIABLES - DARK THEME
+           ============================================ */
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --shadow: 0 20px 60px rgba(0,0,0,0.6);
+            --shadow-hover: 0 30px 80px rgba(0,0,0,0.8);
+            --input-bg: #1e293b;
+            --rec-bg: #052e16;
+            --rec-border: #22c55e;
+            --rec-text: #86efac;
+            --error-bg: #450a0a;
+            --error-text: #fca5a5;
+            --preset-bg: #1e293b;
+            --toggle-bg: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #22c55e15;
+            border: 1px solid #22c55e30;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #22c55e;
+        }
+
+        .status-badge .dot {
+            width: 7px;
+            height: 7px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* ============================================
+           THEME TOGGLE
+           ============================================ */
+        .theme-toggle {
+            width: 48px;
+            height: 26px;
+            background: var(--toggle-bg);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle .ball {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        [data-theme="dark"] .theme-toggle .ball {
+            left: 24px;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            font-size: 14px;
+            padding-left: 14px;
+            border-left: 3px solid var(--gradient-start);
+            transition: var(--transition);
+        }
+
+        /* ============================================
+           FORM
+           ============================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gradient-start);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+        }
+
+        /* ============================================
+           BUTTONS
+           ============================================ */
+        .btn-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-predict {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            min-width: 130px;
+        }
+
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+        }
+
+        .btn-preset {
+            background: var(--preset-bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .btn-preset:hover {
+            background: var(--border);
+            border-color: var(--gradient-start);
+            transform: translateY(-2px);
+        }
+
+        .btn-preset-high {
+            border-color: #dc262640;
+            color: #dc2626;
+        }
+        .btn-preset-high:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.30);
+        }
+
+        .btn-preset-medium {
+            border-color: #f59e0b40;
+            color: #f59e0b;
+        }
+        .btn-preset-medium:hover {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.30);
+        }
+
+        .btn-preset-low {
+            border-color: #22c55e40;
+            color: #22c55e;
+        }
+        .btn-preset-low:hover {
+            background: #22c55e;
+            color: white;
+            border-color: #22c55e;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.30);
+        }
+
+        /* ============================================
+           ERROR
+           ============================================ */
+        #error-msg {
+            color: var(--error-text);
+            margin-top: 15px;
+            padding: 10px 16px;
+            background: var(--error-bg);
+            border-radius: var(--radius-sm);
+            display: none;
+            font-weight: 500;
+            border-left: 4px solid var(--error-text);
+        }
+
+        /* ============================================
+           RESULTS
+           ============================================ */
+        #results {
+            margin-top: 30px;
+            border-top: 2px solid var(--border);
+            padding-top: 25px;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #results h2 {
+            color: var(--text);
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .result-card .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .result-card .value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .result-card.high .value { color: #dc2626; }
+        .result-card.medium .value { color: #f59e0b; }
+        .result-card.low .value { color: #22c55e; }
+
+        .recommendations {
+            background: var(--rec-bg);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            border-left: 4px solid var(--rec-border);
+            transition: var(--transition);
+        }
+
+        .recommendations h3 {
+            color: var(--rec-text);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .recommendations li:last-child {
+            border-bottom: none;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 700px) {
+            .container { padding: 24px; }
+            .form-grid { grid-template-columns: 1fr; gap: 0; }
+            .result-grid { grid-template-columns: 1fr; }
+            .btn-row { flex-direction: column; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .header-actions { width: 100%; justify-content: space-between; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <h1>📊 Churn Predictor</h1>
+        </div>
+        <div class="header-actions">
+            <div class="status-badge">
+                <span class="dot"></span>
+                Online
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="ball">🌙</span>
+            </button>
+        </div>
+    </div>
+
+    <p class="subtitle">Enter customer details or click a preset to predict churn risk</p>
+
+    <!-- FORM -->
+    <div class="form-grid">
+        <!-- Column 1 -->
+        <div>
+            <div class="form-group">
+                <label>📅 Tenure (months)</label>
+                <input type="number" id="tenure" value="12" min="0">
+            </div>
+            <div class="form-group">
+                <label>📄 Contract Type</label>
+                <select id="contract">
+                    <option value="Month-to-month">Month-to-month</option>
+                    <option value="One year">One year</option>
+                    <option value="Two year">Two year</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>💰 Monthly Charges ($)</label>
+                <input type="number" id="monthly_charges" value="70" step="0.01">
+            </div>
+            <div class="form-group">
+                <label>🔄 Payment Method</label>
+                <select id="payment_method">
+                    <option value="Electronic check">Electronic check</option>
+                    <option value="Mailed check">Mailed check</option>
+                    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                    <option value="Credit card (automatic)">Credit card (automatic)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>🔒 Online Security</label>
+                <select id="online_security">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Column 2 -->
+        <div>
+            <div class="form-group">
+                <label>🌐 Internet Service</label>
+                <select id="internet_service">
+                    <option value="No">No</option>
+                    <option value="DSL">DSL</option>
+                    <option value="Fiber optic">Fiber optic</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>🛠️ Tech Support</label>
+                <select id="tech_support">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>👴 Senior Citizen</label>
+                <select id="senior_citizen">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>📧 Paperless Billing</label>
+                <select id="paperless_billing">
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>📱 Phone Service</label>
+                <select id="phone_service">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden fields -->
+    <input type="hidden" id="gender" value="Male">
+    <input type="hidden" id="partner" value="No">
+    <input type="hidden" id="dependents" value="No">
+    <input type="hidden" id="multiple_lines" value="No">
+    <input type="hidden" id="online_backup" value="No">
+    <input type="hidden" id="device_protection" value="No">
+    <input type="hidden" id="streaming_tv" value="No">
+    <input type="hidden" id="streaming_movies" value="No">
+    <input type="hidden" id="total_charges" value="500">
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+        <button class="btn-predict" id="predict-btn">🔮 Predict</button>
+        <button class="btn-preset btn-preset-high" id="preset-high">⚠️ High</button>
+        <button class="btn-preset btn-preset-medium" id="preset-medium">⚡ Medium</button>
+        <button class="btn-preset btn-preset-low" id="preset-low">✅ Low</button>
+    </div>
+
+    <div id="error-msg"></div>
+
+    <!-- RESULTS -->
+    <div id="results">
+        <h2>📊 Prediction Results</h2>
+        <div class="result-grid">
+            <div class="result-card" id="card-prob">
+                <div class="label">Churn Probability</div>
+                <div class="value" id="prob-display">--%</div>
+            </div>
+            <div class="result-card" id="card-risk">
+                <div class="label">Risk Level</div>
+                <div class="value" id="risk-display">--</div>
+            </div>
+            <div class="result-card" id="card-status">
+                <div class="label">Status</div>
+                <div class="value" id="status-display">--</div>
+            </div>
+        </div>
+        <div class="recommendations">
+            <h3>💡 Recommended Actions</h3>
+            <ul id="recommendations-list">
+                <li>Enter customer data and click Predict</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================
+    // THEME TOGGLE
+    // ============================================
+    const themeToggle = document.getElementById('themeToggle');
+    const ball = themeToggle.querySelector('.ball');
+    const root = document.getElementById('theme-root');
+
+    // Check saved preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        ball.textContent = '☀️';
+    } else {
+        ball.textContent = '🌙';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = root.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            root.removeAttribute('data-theme');
+            ball.textContent = '🌙';
+            localStorage.setItem('theme', 'light');
+        } else {
+            root.setAttribute('data-theme', 'dark');
+            ball.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+
+    // ============================================
+    // PRESETS
+    // ============================================
+    const presets = {
+        high: {
+            tenure: 3,
+            contract: 'Month-to-month',
+            monthly_charges: 85.5,
+            payment_method: 'Electronic check',
+            online_security: 'No',
+            internet_service: 'Fiber optic',
+            tech_support: 'No',
+            senior_citizen: '0',
+            paperless_billing: 'Yes',
+            phone_service: 'Yes'
+        },
+        medium: {
+            tenure: 12,
+            contract: 'One year',
+            monthly_charges: 70,
+            payment_method: 'Mailed check',
+            online_security: 'No',
+            internet_service: 'DSL',
+            tech_support: 'No',
+            senior_citizen: '1',
+            paperless_billing: 'Yes',
+            phone_service: 'Yes'
+        },
+        low: {
+            tenure: 48,
+            contract: 'Two year',
+            monthly_charges: 45,
+            payment_method: 'Credit card (automatic)',
+            online_security: 'Yes',
+            internet_service: 'DSL',
+            tech_support: 'Yes',
+            senior_citizen: '0',
+            paperless_billing: 'No',
+            phone_service: 'Yes'
+        }
+    };
+
+    function fillPreset(preset) {
+        document.getElementById('tenure').value = preset.tenure;
+        document.getElementById('contract').value = preset.contract;
+        document.getElementById('monthly_charges').value = preset.monthly_charges;
+        document.getElementById('payment_method').value = preset.payment_method;
+        document.getElementById('online_security').value = preset.online_security;
+        document.getElementById('internet_service').value = preset.internet_service;
+        document.getElementById('tech_support').value = preset.tech_support;
+        document.getElementById('senior_citizen').value = preset.senior_citizen;
+        document.getElementById('paperless_billing').value = preset.paperless_billing;
+        document.getElementById('phone_service').value = preset.phone_service;
+    }
+
+    document.getElementById('preset-high').addEventListener('click', function() {
+        fillPreset(presets.high);
+        document.getElementById('predict-btn').click();
+    });
+    document.getElementById('preset-medium').addEventListener('click', function() {
+        fillPreset(presets.medium);
+        document.getElementById('predict-btn').click();
+    });
+    document.getElementById('preset-low').addEventListener('click', function() {
+        fillPreset(presets.low);
+        document.getElementById('predict-btn').click();
+    });
+
+    // ============================================
+    // PREDICT
+    // ============================================
+    document.getElementById('predict-btn').addEventListener('click', async function() {
+        document.getElementById('error-msg').style.display = 'none';
+        document.getElementById('error-msg').textContent = '';
+
+        const data = {
+            gender: 'Male',
+            SeniorCitizen: parseInt(document.getElementById('senior_citizen').value),
+            Partner: 'No',
+            Dependents: 'No',
+            tenure: parseInt(document.getElementById('tenure').value),
+            PhoneService: document.getElementById('phone_service').value,
+            MultipleLines: 'No',
+            InternetService: document.getElementById('internet_service').value,
+            OnlineSecurity: document.getElementById('online_security').value,
+            OnlineBackup: 'No',
+            DeviceProtection: 'No',
+            TechSupport: document.getElementById('tech_support').value,
+            StreamingTV: 'No',
+            StreamingMovies: 'No',
+            Contract: document.getElementById('contract').value,
+            PaperlessBilling: document.getElementById('paperless_billing').value,
+            PaymentMethod: document.getElementById('payment_method').value,
+            MonthlyCharges: parseFloat(document.getElementById('monthly_charges').value),
+            TotalCharges: parseFloat(document.getElementById('total_charges').value)
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            const result = await response.json();
+
+            if (result.error) {
+                throw new Error(result.error);
+            }
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('prob-display').textContent = result.probability + '%';
+            document.getElementById('risk-display').textContent = result.risk_level;
+
+            const riskEl = document.getElementById('risk-display');
+            const cardRisk = document.getElementById('card-risk');
+            cardRisk.className = 'result-card ' + result.risk_level.toLowerCase();
+
+            const statusEl = document.getElementById('status-display');
+            if (result.risk_level === 'High') {
+                statusEl.textContent = '⚠️ Needs Attention';
+                statusEl.style.color = '#dc2626';
+            } else if (result.risk_level === 'Medium') {
+                statusEl.textContent = '⚡ Monitor Closely';
+                statusEl.style.color = '#f59e0b';
+            } else {
+                statusEl.textContent = '✅ Safe';
+                statusEl.style.color = '#22c55e';
+            }
+
+            const list = document.getElementById('recommendations-list');
+            list.innerHTML = '';
+            if (result.recommendations && result.recommendations.length > 0) {
+                result.recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = '✅ ' + rec;
+                    list.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = '✅ Customer seems low risk. No immediate action needed.';
+                list.appendChild(li);
+            }
+
+        } catch (error) {
+            document.getElementById('error-msg').textContent = '❌ ' + error.message;
+            document.getElementById('error-msg').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
