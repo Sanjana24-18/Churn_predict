@@ -6,144 +6,119 @@
     <title>Churn Predictor</title>
     <style>
         /* ============================================
-           CSS VARIABLES - LIGHT THEME (Default)
+           CSS VARIABLES
            ============================================ */
         :root {
-            --bg: #f0f4f8;
+            --bg: #f1f5f9;
             --card-bg: #ffffff;
-            --text: #1a202c;
-            --text-secondary: #4a5568;
+            --text: #0f172a;
+            --text-secondary: #475569;
             --border: #e2e8f0;
-            --shadow: 0 20px 60px rgba(0,0,0,0.08);
-            --shadow-hover: 0 30px 80px rgba(0,0,0,0.15);
-            --radius: 20px;
-            --radius-sm: 12px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.06);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.10);
+            --radius: 16px;
+            --radius-sm: 10px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --gradient-start: #0ea5e9;
-            --gradient-end: #6366f1;
+            --gradient-start: #6366f1;
+            --gradient-end: #8b5cf6;
             --input-bg: #f8fafc;
-            --rec-bg: #f0fdf4;
-            --rec-border: #22c55e;
-            --rec-text: #15803d;
-            --error-bg: #fee2e2;
-            --error-text: #dc2626;
-            --preset-bg: #f1f5f9;
-            --toggle-bg: #e2e8f0;
+            --nav-bg: #ffffff;
+            --nav-border: #e2e8f0;
+            --insight-bg: #f0fdf4;
+            --insight-border: #22c55e;
         }
 
-        /* ============================================
-           CSS VARIABLES - DARK THEME
-           ============================================ */
         [data-theme="dark"] {
             --bg: #0f172a;
             --card-bg: #1e293b;
             --text: #f1f5f9;
             --text-secondary: #94a3b8;
             --border: #334155;
-            --shadow: 0 20px 60px rgba(0,0,0,0.6);
-            --shadow-hover: 0 30px 80px rgba(0,0,0,0.8);
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+            --shadow-hover: 0 12px 48px rgba(0,0,0,0.6);
             --input-bg: #1e293b;
-            --rec-bg: #052e16;
-            --rec-border: #22c55e;
-            --rec-text: #86efac;
-            --error-bg: #450a0a;
-            --error-text: #fca5a5;
-            --preset-bg: #1e293b;
-            --toggle-bg: #475569;
+            --nav-bg: #1e293b;
+            --nav-border: #334155;
+            --insight-bg: #052e16;
+            --insight-border: #22c55e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
             transition: var(--transition);
         }
 
-        .container {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid var(--border);
-        }
-
-        /* ============================================
-           HEADER
-           ============================================ */
-        .header {
+        .navbar {
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--nav-border);
+            padding: 12px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            transition: var(--transition);
         }
 
-        .header-left h1 {
-            font-size: 28px;
+        .navbar .logo {
+            font-size: 20px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text);
+            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .header-actions {
+        .navbar .logo span {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .nav-links a.active {
+            background: var(--gradient-start);
+            color: white;
+        }
+
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            background: #22c55e15;
-            border: 1px solid #22c55e30;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #22c55e;
-        }
-
-        .status-badge .dot {
-            width: 7px;
-            height: 7px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: blink 1.5s ease-in-out infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
-
-        /* ============================================
-           THEME TOGGLE
-           ============================================ */
         .theme-toggle {
-            width: 48px;
-            height: 26px;
-            background: var(--toggle-bg);
+            width: 44px;
+            height: 24px;
+            background: var(--border);
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -156,8 +131,8 @@
             position: absolute;
             top: 2px;
             left: 2px;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             background: white;
             border-radius: 50%;
             transition: var(--transition);
@@ -165,169 +140,25 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 10px;
         }
 
         [data-theme="dark"] .theme-toggle .ball {
-            left: 24px;
+            left: 22px;
         }
 
-        .theme-toggle:hover {
-            transform: scale(1.05);
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
         }
 
-        .subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 25px;
-            font-size: 14px;
-            padding-left: 14px;
-            border-left: 3px solid var(--gradient-start);
-            transition: var(--transition);
+        .page {
+            display: none;
         }
-
-        /* ============================================
-           FORM
-           ============================================ */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
+        .page.active {
             display: block;
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            transition: var(--transition);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            transition: var(--transition);
-            background: var(--input-bg);
-            color: var(--text);
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--gradient-start);
-            background: var(--card-bg);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-        }
-
-        /* ============================================
-           BUTTONS
-           ============================================ */
-        .btn-row {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-
-        .btn-predict {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-            flex: 1;
-            min-width: 130px;
-        }
-
-        .btn-predict:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
-        }
-
-        .btn-preset {
-            background: var(--preset-bg);
-            color: var(--text);
-            border: 2px solid var(--border);
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: var(--transition);
-        }
-
-        .btn-preset:hover {
-            background: var(--border);
-            border-color: var(--gradient-start);
-            transform: translateY(-2px);
-        }
-
-        .btn-preset-high {
-            border-color: #dc262640;
-            color: #dc2626;
-        }
-        .btn-preset-high:hover {
-            background: #dc2626;
-            color: white;
-            border-color: #dc2626;
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.30);
-        }
-
-        .btn-preset-medium {
-            border-color: #f59e0b40;
-            color: #f59e0b;
-        }
-        .btn-preset-medium:hover {
-            background: #f59e0b;
-            color: white;
-            border-color: #f59e0b;
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.30);
-        }
-
-        .btn-preset-low {
-            border-color: #22c55e40;
-            color: #22c55e;
-        }
-        .btn-preset-low:hover {
-            background: #22c55e;
-            color: white;
-            border-color: #22c55e;
-            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.30);
-        }
-
-        /* ============================================
-           ERROR
-           ============================================ */
-        #error-msg {
-            color: var(--error-text);
-            margin-top: 15px;
-            padding: 10px 16px;
-            background: var(--error-bg);
-            border-radius: var(--radius-sm);
-            display: none;
-            font-weight: 500;
-            border-left: 4px solid var(--error-text);
-        }
-
-        /* ============================================
-           RESULTS
-           ============================================ */
-        #results {
-            margin-top: 30px;
-            border-top: 2px solid var(--border);
-            padding-top: 25px;
-            display: none;
-            animation: fadeUp 0.5s ease;
+            animation: fadeUp 0.4s ease;
         }
 
         @keyframes fadeUp {
@@ -335,425 +166,902 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        #results h2 {
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
             color: var(--text);
-            margin-bottom: 20px;
-            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card .icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .feature-card h3 {
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: var(--transition);
+            font-family: inherit;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gradient-start);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            flex: 1;
+            min-width: 130px;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.30);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1.5px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--gradient-start);
+            background: var(--bg);
+        }
+
+        .btn-danger { border-color: #dc262640; color: #dc2626; }
+        .btn-danger:hover { background: #dc2626; color: white; }
+        .btn-warning { border-color: #f59e0b40; color: #f59e0b; }
+        .btn-warning:hover { background: #f59e0b; color: white; }
+        .btn-success { border-color: #22c55e40; color: #22c55e; }
+        .btn-success:hover { background: #22c55e; color: white; }
+
+        #single-results {
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1.5px solid var(--border);
+            display: none;
+        }
+        #single-results.active {
+            display: block;
+            animation: fadeUp 0.5s ease;
         }
 
         .result-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
             margin-bottom: 20px;
         }
 
         .result-card {
-            padding: 20px;
+            background: var(--bg);
             border-radius: var(--radius-sm);
+            padding: 20px 16px;
             text-align: center;
-            background: var(--input-bg);
-            border: 2px solid var(--border);
+            border: 1.5px solid var(--border);
             transition: var(--transition);
         }
+        .result-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+        .result-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-secondary); font-weight: 600; }
+        .result-card .value { font-size: 30px; font-weight: 800; margin-top: 4px; }
+        .result-card .value.high { color: #dc2626; }
+        .result-card .value.medium { color: #f59e0b; }
+        .result-card .value.low { color: #22c55e; }
 
-        .result-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+        .prob-bar-wrap {
+            margin-top: 8px;
+            background: var(--border);
+            border-radius: 50px;
+            height: 5px;
+            overflow: hidden;
+        }
+        .prob-bar { height: 100%; border-radius: 50px; width: 0%; background: linear-gradient(90deg, #22c55e, #f59e0b, #dc2626); transition: width 0.8s ease; }
+
+        .rec-box {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            border-left: 4px solid var(--gradient-start);
+        }
+        .rec-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+        .rec-box ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+        .rec-box li { padding: 8px 14px; background: var(--card-bg); border-radius: 6px; font-size: 13px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .rec-box li::before { content: '▸'; color: var(--gradient-start); font-weight: 700; }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 50px 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .upload-area:hover { border-color: var(--gradient-start); background: var(--bg); }
+        .upload-area .icon { font-size: 48px; margin-bottom: 12px; }
+        .upload-area p { color: var(--text-secondary); }
+
+        #file-input { display: none; }
+
+        #batch-results {
+            margin-top: 30px;
+            display: none;
+        }
+        #batch-results.active {
+            display: block;
+            animation: fadeUp 0.5s ease;
         }
 
-        .result-card .label {
+        .batch-summary {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .summary-card {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            border: 1.5px solid var(--border);
+        }
+        .summary-card .num { font-size: 28px; font-weight: 800; }
+        .summary-card .label { font-size: 12px; color: var(--text-secondary); }
+        .summary-card.high .num { color: #dc2626; }
+        .summary-card.medium .num { color: #f59e0b; }
+        .summary-card.low .num { color: #22c55e; }
+
+        .batch-table-wrap {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+        .batch-table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 13px;
+        }
+        .batch-table th {
+            background: var(--bg);
             color: var(--text-secondary);
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            padding: 10px 12px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            z-index: 5;
         }
-
-        .result-card .value {
-            font-size: 32px;
-            font-weight: 700;
-            margin-top: 5px;
+        .batch-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
         }
+        .batch-table tr:hover { background: var(--bg); }
 
-        .result-card.high .value { color: #dc2626; }
-        .result-card.medium .value { color: #f59e0b; }
-        .result-card.low .value { color: #22c55e; }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-high { background: #fee2e2; color: #dc2626; }
+        .badge-medium { background: #fef3c7; color: #f59e0b; }
+        .badge-low { background: #dcfce7; color: #22c55e; }
 
-        .recommendations {
-            background: var(--rec-bg);
+        /* ============================================
+           KEY INSIGHTS SECTION - NEW
+           ============================================ */
+        .insights-section {
+            margin: 24px 0;
+            padding: 20px 24px;
+            background: var(--insight-bg);
             border-radius: var(--radius-sm);
-            padding: 20px;
-            border-left: 4px solid var(--rec-border);
-            transition: var(--transition);
+            border-left: 4px solid var(--insight-border);
         }
-
-        .recommendations h3 {
-            color: var(--rec-text);
-            margin-bottom: 10px;
+        .insights-section h3 {
+            color: var(--text);
             font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .insight-item {
+            padding: 10px 14px;
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .insight-item .emoji {
+            font-size: 18px;
+        }
+        .insight-item .highlight {
+            font-weight: 700;
+            color: var(--gradient-start);
+        }
+        .insight-item .highlight-danger {
+            font-weight: 700;
+            color: #dc2626;
         }
 
-        .recommendations ul {
+        .recommendation-box {
+            margin-top: 12px;
+            padding: 14px 18px;
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .recommendation-box h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .recommendation-box ul {
             list-style: none;
             padding: 0;
         }
-
-        .recommendations li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
+        .recommendation-box li {
+            font-size: 13px;
+            padding: 4px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .recommendation-box li::before {
+            content: '💡';
             font-size: 14px;
-            color: var(--text);
-            transition: var(--transition);
         }
 
-        .recommendations li:last-child {
-            border-bottom: none;
-        }
-
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 700px) {
-            .container { padding: 24px; }
-            .form-grid { grid-template-columns: 1fr; gap: 0; }
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+            .nav-links { order: 3; width: 100%; justify-content: center; }
+            .form-grid { grid-template-columns: 1fr; }
             .result-grid { grid-template-columns: 1fr; }
-            .btn-row { flex-direction: column; }
-            .header { flex-direction: column; align-items: flex-start; }
-            .header-actions { width: 100%; justify-content: space-between; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .batch-summary { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 26px; }
+            .insights-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
+<!-- NAVIGATION -->
+<nav class="navbar">
+    <a href="#" class="logo" onclick="showPage('home')">📊 <span>ChurnPredict</span></a>
+    <div class="nav-links">
+        <a href="#" class="active" onclick="showPage('home')">Home</a>
+        <a href="#" onclick="showPage('single')">Single Predict</a>
+        <a href="#" onclick="showPage('batch')">Batch Predict</a>
+    </div>
+    <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle">
+            <span class="ball">🌙</span>
+        </button>
+    </div>
+</nav>
+
 <div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
-        <div class="header-left">
-            <h1>📊 Churn Predictor</h1>
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+        <div class="hero">
+            <h1>Customer Churn <span>Predictor</span></h1>
+            <p>AI-powered tool to identify customers at risk of leaving.</p>
         </div>
-        <div class="header-actions">
-            <div class="status-badge">
-                <span class="dot"></span>
-                Online
+        <div class="feature-grid">
+            <div class="feature-card" onclick="showPage('single')">
+                <div class="icon">👤</div>
+                <h3>Single Customer</h3>
+                <p>Predict churn for one customer by filling in their details.</p>
             </div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <span class="ball">🌙</span>
-            </button>
-        </div>
-    </div>
-
-    <p class="subtitle">Enter customer details or click a preset to predict churn risk</p>
-
-    <!-- FORM -->
-    <div class="form-grid">
-        <!-- Column 1 -->
-        <div>
-            <div class="form-group">
-                <label>📅 Tenure (months)</label>
-                <input type="number" id="tenure" value="12" min="0">
-            </div>
-            <div class="form-group">
-                <label>📄 Contract Type</label>
-                <select id="contract">
-                    <option value="Month-to-month">Month-to-month</option>
-                    <option value="One year">One year</option>
-                    <option value="Two year">Two year</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>💰 Monthly Charges ($)</label>
-                <input type="number" id="monthly_charges" value="70" step="0.01">
-            </div>
-            <div class="form-group">
-                <label>🔄 Payment Method</label>
-                <select id="payment_method">
-                    <option value="Electronic check">Electronic check</option>
-                    <option value="Mailed check">Mailed check</option>
-                    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
-                    <option value="Credit card (automatic)">Credit card (automatic)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>🔒 Online Security</label>
-                <select id="online_security">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Column 2 -->
-        <div>
-            <div class="form-group">
-                <label>🌐 Internet Service</label>
-                <select id="internet_service">
-                    <option value="No">No</option>
-                    <option value="DSL">DSL</option>
-                    <option value="Fiber optic">Fiber optic</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>🛠️ Tech Support</label>
-                <select id="tech_support">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>👴 Senior Citizen</label>
-                <select id="senior_citizen">
-                    <option value="0">No</option>
-                    <option value="1">Yes</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>📧 Paperless Billing</label>
-                <select id="paperless_billing">
-                    <option value="No">No</option>
-                    <option value="Yes">Yes</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>📱 Phone Service</label>
-                <select id="phone_service">
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>
+            <div class="feature-card" onclick="showPage('batch')">
+                <div class="icon">📁</div>
+                <h3>Batch Upload</h3>
+                <p>Upload a CSV file with all your customers and get risk scores.</p>
             </div>
         </div>
     </div>
 
-    <!-- Hidden fields -->
-    <input type="hidden" id="gender" value="Male">
-    <input type="hidden" id="partner" value="No">
-    <input type="hidden" id="dependents" value="No">
-    <input type="hidden" id="multiple_lines" value="No">
-    <input type="hidden" id="online_backup" value="No">
-    <input type="hidden" id="device_protection" value="No">
-    <input type="hidden" id="streaming_tv" value="No">
-    <input type="hidden" id="streaming_movies" value="No">
-    <input type="hidden" id="total_charges" value="500">
+    <!-- SINGLE PREDICT -->
+    <div id="page-single" class="page">
+        <h2 class="page-title">🔮 Single Customer Prediction</h2>
+        <p class="page-subtitle">Enter customer details below to predict churn risk</p>
 
-    <!-- BUTTONS -->
-    <div class="btn-row">
-        <button class="btn-predict" id="predict-btn">🔮 Predict</button>
-        <button class="btn-preset btn-preset-high" id="preset-high">⚠️ High</button>
-        <button class="btn-preset btn-preset-medium" id="preset-medium">⚡ Medium</button>
-        <button class="btn-preset btn-preset-low" id="preset-low">✅ Low</button>
-    </div>
-
-    <div id="error-msg"></div>
-
-    <!-- RESULTS -->
-    <div id="results">
-        <h2>📊 Prediction Results</h2>
-        <div class="result-grid">
-            <div class="result-card" id="card-prob">
-                <div class="label">Churn Probability</div>
-                <div class="value" id="prob-display">--%</div>
+        <div class="form-grid">
+            <div>
+                <div class="form-group">
+                    <label>Tenure (months)</label>
+                    <input type="number" id="tenure" value="12" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Contract Type</label>
+                    <select id="contract">
+                        <option value="Month-to-month">Month-to-month</option>
+                        <option value="One year">One year</option>
+                        <option value="Two year">Two year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monthly Charges ($)</label>
+                    <input type="number" id="monthly_charges" value="70" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="payment_method">
+                        <option value="Electronic check">Electronic check</option>
+                        <option value="Mailed check">Mailed check</option>
+                        <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                        <option value="Credit card (automatic)">Credit card (automatic)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Online Security</label>
+                    <select id="online_security">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
             </div>
-            <div class="result-card" id="card-risk">
-                <div class="label">Risk Level</div>
-                <div class="value" id="risk-display">--</div>
-            </div>
-            <div class="result-card" id="card-status">
-                <div class="label">Status</div>
-                <div class="value" id="status-display">--</div>
+            <div>
+                <div class="form-group">
+                    <label>Internet Service</label>
+                    <select id="internet_service">
+                        <option value="No">No</option>
+                        <option value="DSL">DSL</option>
+                        <option value="Fiber optic">Fiber optic</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tech Support</label>
+                    <select id="tech_support">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Senior Citizen</label>
+                    <select id="senior_citizen">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Paperless Billing</label>
+                    <select id="paperless_billing">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone Service</label>
+                    <select id="phone_service">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="recommendations">
-            <h3>💡 Recommended Actions</h3>
-            <ul id="recommendations-list">
-                <li>Enter customer data and click Predict</li>
-            </ul>
+
+        <input type="hidden" id="gender" value="Male">
+        <input type="hidden" id="partner" value="No">
+        <input type="hidden" id="dependents" value="No">
+        <input type="hidden" id="multiple_lines" value="No">
+        <input type="hidden" id="online_backup" value="No">
+        <input type="hidden" id="device_protection" value="No">
+        <input type="hidden" id="streaming_tv" value="No">
+        <input type="hidden" id="streaming_movies" value="No">
+        <input type="hidden" id="total_charges" value="500">
+
+        <div class="btn-row">
+            <button class="btn btn-primary" id="predict-btn">🔮 Predict</button>
+            <button class="btn btn-outline btn-danger" id="preset-high">🔴 High</button>
+            <button class="btn btn-outline btn-warning" id="preset-medium">🟠 Medium</button>
+            <button class="btn btn-outline btn-success" id="preset-low">🟢 Low</button>
         </div>
+
+        <div id="single-results">
+            <div class="result-grid">
+                <div class="result-card"><div class="label">Probability</div><div class="value" id="prob-display">--%</div><div class="prob-bar-wrap"><div class="prob-bar" id="prob-bar" style="width:0%"></div></div></div>
+                <div class="result-card"><div class="label">Risk Level</div><div class="value" id="risk-display">--</div></div>
+                <div class="result-card"><div class="label">Status</div><div class="value" id="status-display">--</div></div>
+            </div>
+            <div class="rec-box"><h3>💡 Recommended Actions</h3><ul id="rec-list"><li>Enter data and click Predict</li></ul></div>
+        </div>
+        <div id="single-error" style="color:#dc2626; margin-top:12px; display:none;"></div>
     </div>
+
+    <!-- BATCH PREDICT -->
+    <div id="page-batch" class="page">
+        <h2 class="page-title">📁 Batch Prediction</h2>
+        <p class="page-subtitle">Upload a CSV file with customer data to get risk predictions for all customers.</p>
+
+        <div class="upload-area" id="upload-area">
+            <div class="icon">📤</div>
+            <p><strong>Drop your CSV here</strong> or click to browse</p>
+            <p style="font-size:13px; margin-top:8px;">Your file should have columns: tenure, Contract, MonthlyCharges, etc.</p>
+            <input type="file" id="file-input" accept=".csv">
+        </div>
+
+        <div id="batch-results">
+            <!-- Summary Cards -->
+            <div class="batch-summary">
+                <div class="summary-card high"><div class="num" id="high-count">0</div><div class="label">🔴 High Risk</div></div>
+                <div class="summary-card medium"><div class="num" id="medium-count">0</div><div class="label">🟠 Medium Risk</div></div>
+                <div class="summary-card low"><div class="num" id="low-count">0</div><div class="label">🟢 Low Risk</div></div>
+            </div>
+
+            <!-- KEY INSIGHTS SECTION - NEW -->
+            <div class="insights-section" id="insights-section" style="display:none;">
+                <h3>📊 Key Insights & Recommendations</h3>
+                <div class="insights-grid" id="insights-grid">
+                    <!-- Dynamically populated -->
+                </div>
+                <div class="recommendation-box" id="recommendation-box" style="display:none;">
+                    <h4>💡 Recommended Actions</h4>
+                    <ul id="recommendation-list">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="batch-table-wrap">
+                <table class="batch-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tenure</th>
+                            <th>Contract</th>
+                            <th>Monthly Charges</th>
+                            <th>Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batch-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="batch-error" style="color:#dc2626; margin-top:12px; display:none;"></div>
+    </div>
+
 </div>
 
 <script>
-    // ============================================
-    // THEME TOGGLE
-    // ============================================
-    const themeToggle = document.getElementById('themeToggle');
-    const ball = themeToggle.querySelector('.ball');
-    const root = document.getElementById('theme-root');
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+const ball = themeToggle.querySelector('.ball');
+const root = document.getElementById('theme-root');
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') { root.setAttribute('data-theme', 'dark'); ball.textContent = '☀️'; }
+else { ball.textContent = '🌙'; }
+themeToggle.addEventListener('click', () => {
+    const isDark = root.hasAttribute('data-theme');
+    if (isDark) { root.removeAttribute('data-theme'); ball.textContent = '🌙'; localStorage.setItem('theme', 'light'); }
+    else { root.setAttribute('data-theme', 'dark'); ball.textContent = '☀️'; localStorage.setItem('theme', 'dark'); }
+});
 
-    // Check saved preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        root.setAttribute('data-theme', 'dark');
-        ball.textContent = '☀️';
-    } else {
-        ball.textContent = '🌙';
-    }
+// Page navigation
+function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    const links = document.querySelectorAll('.nav-links a');
+    const map = { home: 0, single: 1, batch: 2 };
+    if (links[map[page]]) links[map[page]].classList.add('active');
+}
 
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = root.getAttribute('data-theme');
-        if (currentTheme === 'dark') {
-            root.removeAttribute('data-theme');
-            ball.textContent = '🌙';
-            localStorage.setItem('theme', 'light');
-        } else {
-            root.setAttribute('data-theme', 'dark');
-            ball.textContent = '☀️';
-            localStorage.setItem('theme', 'dark');
-        }
-    });
+// ============================================
+// PRESETS
+// ============================================
+const presets = {
+    high: { tenure: 3, contract: 'Month-to-month', monthly_charges: 85.5, payment_method: 'Electronic check', online_security: 'No', internet_service: 'Fiber optic', tech_support: 'No', senior_citizen: '0', paperless_billing: 'Yes', phone_service: 'Yes' },
+    medium: { tenure: 12, contract: 'One year', monthly_charges: 70, payment_method: 'Mailed check', online_security: 'No', internet_service: 'DSL', tech_support: 'No', senior_citizen: '1', paperless_billing: 'Yes', phone_service: 'Yes' },
+    low: { tenure: 48, contract: 'Two year', monthly_charges: 45, payment_method: 'Credit card (automatic)', online_security: 'Yes', internet_service: 'DSL', tech_support: 'Yes', senior_citizen: '0', paperless_billing: 'No', phone_service: 'Yes' }
+};
 
-    // ============================================
-    // PRESETS
-    // ============================================
-    const presets = {
-        high: {
-            tenure: 3,
-            contract: 'Month-to-month',
-            monthly_charges: 85.5,
-            payment_method: 'Electronic check',
-            online_security: 'No',
-            internet_service: 'Fiber optic',
-            tech_support: 'No',
-            senior_citizen: '0',
-            paperless_billing: 'Yes',
-            phone_service: 'Yes'
-        },
-        medium: {
-            tenure: 12,
-            contract: 'One year',
-            monthly_charges: 70,
-            payment_method: 'Mailed check',
-            online_security: 'No',
-            internet_service: 'DSL',
-            tech_support: 'No',
-            senior_citizen: '1',
-            paperless_billing: 'Yes',
-            phone_service: 'Yes'
-        },
-        low: {
-            tenure: 48,
-            contract: 'Two year',
-            monthly_charges: 45,
-            payment_method: 'Credit card (automatic)',
-            online_security: 'Yes',
-            internet_service: 'DSL',
-            tech_support: 'Yes',
-            senior_citizen: '0',
-            paperless_billing: 'No',
-            phone_service: 'Yes'
-        }
+function fillPreset(p) {
+    document.getElementById('tenure').value = p.tenure;
+    document.getElementById('contract').value = p.contract;
+    document.getElementById('monthly_charges').value = p.monthly_charges;
+    document.getElementById('payment_method').value = p.payment_method;
+    document.getElementById('online_security').value = p.online_security;
+    document.getElementById('internet_service').value = p.internet_service;
+    document.getElementById('tech_support').value = p.tech_support;
+    document.getElementById('senior_citizen').value = p.senior_citizen;
+    document.getElementById('paperless_billing').value = p.paperless_billing;
+    document.getElementById('phone_service').value = p.phone_service;
+}
+
+document.getElementById('preset-high').addEventListener('click', () => { fillPreset(presets.high); predictSingle(); });
+document.getElementById('preset-medium').addEventListener('click', () => { fillPreset(presets.medium); predictSingle(); });
+document.getElementById('preset-low').addEventListener('click', () => { fillPreset(presets.low); predictSingle(); });
+document.getElementById('predict-btn').addEventListener('click', predictSingle);
+
+// ============================================
+// SINGLE PREDICT
+// ============================================
+async function predictSingle() {
+    const errorEl = document.getElementById('single-error');
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+    const data = {
+        gender: 'Male',
+        SeniorCitizen: parseInt(document.getElementById('senior_citizen').value),
+        Partner: 'No',
+        Dependents: 'No',
+        tenure: parseInt(document.getElementById('tenure').value),
+        PhoneService: document.getElementById('phone_service').value,
+        MultipleLines: 'No',
+        InternetService: document.getElementById('internet_service').value,
+        OnlineSecurity: document.getElementById('online_security').value,
+        OnlineBackup: 'No',
+        DeviceProtection: 'No',
+        TechSupport: document.getElementById('tech_support').value,
+        StreamingTV: 'No',
+        StreamingMovies: 'No',
+        Contract: document.getElementById('contract').value,
+        PaperlessBilling: document.getElementById('paperless_billing').value,
+        PaymentMethod: document.getElementById('payment_method').value,
+        MonthlyCharges: parseFloat(document.getElementById('monthly_charges').value),
+        TotalCharges: parseFloat(document.getElementById('total_charges').value)
     };
-
-    function fillPreset(preset) {
-        document.getElementById('tenure').value = preset.tenure;
-        document.getElementById('contract').value = preset.contract;
-        document.getElementById('monthly_charges').value = preset.monthly_charges;
-        document.getElementById('payment_method').value = preset.payment_method;
-        document.getElementById('online_security').value = preset.online_security;
-        document.getElementById('internet_service').value = preset.internet_service;
-        document.getElementById('tech_support').value = preset.tech_support;
-        document.getElementById('senior_citizen').value = preset.senior_citizen;
-        document.getElementById('paperless_billing').value = preset.paperless_billing;
-        document.getElementById('phone_service').value = preset.phone_service;
+    try {
+        const res = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const result = await res.json();
+        if (result.error) throw new Error(result.error);
+        document.getElementById('single-results').style.display = 'block';
+        document.getElementById('prob-display').textContent = result.probability + '%';
+        document.getElementById('prob-bar').style.width = result.probability + '%';
+        const riskEl = document.getElementById('risk-display');
+        riskEl.textContent = result.risk_level;
+        riskEl.className = 'value ' + result.risk_level.toLowerCase();
+        const statusEl = document.getElementById('status-display');
+        if (result.risk_level === 'High') { statusEl.textContent = '⚠️ Action Required'; statusEl.style.color = '#dc2626'; }
+        else if (result.risk_level === 'Medium') { statusEl.textContent = '⚡ Monitor Closely'; statusEl.style.color = '#f59e0b'; }
+        else { statusEl.textContent = '✅ Safe'; statusEl.style.color = '#22c55e'; }
+        const list = document.getElementById('rec-list');
+        list.innerHTML = '';
+        result.recommendations.forEach(rec => { const li = document.createElement('li'); li.textContent = rec; list.appendChild(li); });
+    } catch (err) {
+        errorEl.textContent = '❌ ' + err.message;
+        errorEl.style.display = 'block';
+        document.getElementById('single-results').style.display = 'none';
     }
+}
 
-    document.getElementById('preset-high').addEventListener('click', function() {
-        fillPreset(presets.high);
-        document.getElementById('predict-btn').click();
-    });
-    document.getElementById('preset-medium').addEventListener('click', function() {
-        fillPreset(presets.medium);
-        document.getElementById('predict-btn').click();
-    });
-    document.getElementById('preset-low').addEventListener('click', function() {
-        fillPreset(presets.low);
-        document.getElementById('predict-btn').click();
-    });
+// ============================================
+// BATCH PREDICT WITH INSIGHTS
+// ============================================
+const fileInput = document.getElementById('file-input');
+const uploadArea = document.getElementById('upload-area');
 
-    // ============================================
-    // PREDICT
-    // ============================================
-    document.getElementById('predict-btn').addEventListener('click', async function() {
-        document.getElementById('error-msg').style.display = 'none';
-        document.getElementById('error-msg').textContent = '';
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--gradient-start)'; });
+uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'var(--border)'; });
+uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.style.borderColor = 'var(--border)'; if (e.dataTransfer.files.length) fileInput.files = e.dataTransfer.files; handleFile(); });
+fileInput.addEventListener('change', handleFile);
 
-        const data = {
-            gender: 'Male',
-            SeniorCitizen: parseInt(document.getElementById('senior_citizen').value),
-            Partner: 'No',
-            Dependents: 'No',
-            tenure: parseInt(document.getElementById('tenure').value),
-            PhoneService: document.getElementById('phone_service').value,
-            MultipleLines: 'No',
-            InternetService: document.getElementById('internet_service').value,
-            OnlineSecurity: document.getElementById('online_security').value,
-            OnlineBackup: 'No',
-            DeviceProtection: 'No',
-            TechSupport: document.getElementById('tech_support').value,
-            StreamingTV: 'No',
-            StreamingMovies: 'No',
-            Contract: document.getElementById('contract').value,
-            PaperlessBilling: document.getElementById('paperless_billing').value,
-            PaymentMethod: document.getElementById('payment_method').value,
-            MonthlyCharges: parseFloat(document.getElementById('monthly_charges').value),
-            TotalCharges: parseFloat(document.getElementById('total_charges').value)
-        };
-
-        try {
-            const response = await fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText);
-            }
-
-            const result = await response.json();
-
-            if (result.error) {
-                throw new Error(result.error);
-            }
-
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('prob-display').textContent = result.probability + '%';
-            document.getElementById('risk-display').textContent = result.risk_level;
-
-            const riskEl = document.getElementById('risk-display');
-            const cardRisk = document.getElementById('card-risk');
-            cardRisk.className = 'result-card ' + result.risk_level.toLowerCase();
-
-            const statusEl = document.getElementById('status-display');
-            if (result.risk_level === 'High') {
-                statusEl.textContent = '⚠️ Needs Attention';
-                statusEl.style.color = '#dc2626';
-            } else if (result.risk_level === 'Medium') {
-                statusEl.textContent = '⚡ Monitor Closely';
-                statusEl.style.color = '#f59e0b';
-            } else {
-                statusEl.textContent = '✅ Safe';
-                statusEl.style.color = '#22c55e';
-            }
-
-            const list = document.getElementById('recommendations-list');
-            list.innerHTML = '';
-            if (result.recommendations && result.recommendations.length > 0) {
-                result.recommendations.forEach(rec => {
-                    const li = document.createElement('li');
-                    li.textContent = '✅ ' + rec;
-                    list.appendChild(li);
-                });
-            } else {
-                const li = document.createElement('li');
-                li.textContent = '✅ Customer seems low risk. No immediate action needed.';
-                list.appendChild(li);
-            }
-
-        } catch (error) {
-            document.getElementById('error-msg').textContent = '❌ ' + error.message;
-            document.getElementById('error-msg').style.display = 'block';
-            document.getElementById('results').style.display = 'none';
+async function handleFile() {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const errorEl = document.getElementById('batch-error');
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+        const res = await fetch('http://127.0.0.1:5000/predict_batch', {
+            method: 'POST',
+            body: formData
+        });
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(errorText);
         }
-    });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        // Show results
+        document.getElementById('batch-results').classList.add('active');
+
+        // Update summary counts
+        document.getElementById('high-count').textContent = data.high_risk;
+        document.getElementById('medium-count').textContent = data.medium_risk;
+        document.getElementById('low-count').textContent = data.low_risk;
+
+        // Populate table
+        const tbody = document.getElementById('batch-tbody');
+        tbody.innerHTML = '';
+        data.results.forEach((r) => {
+            const tr = document.createElement('tr');
+            const badgeClass = 'badge-' + r.risk_level.toLowerCase();
+            tr.innerHTML = `
+                <td>${r.row}</td>
+                <td>${r.customer_data?.tenure || 'N/A'}</td>
+                <td>${r.customer_data?.Contract || 'N/A'}</td>
+                <td>$${r.customer_data?.MonthlyCharges || 0}</td>
+                <td><span class="badge ${badgeClass}">${r.risk_level}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        // ============================================
+        // GENERATE INSIGHTS FROM THE DATA
+        // ============================================
+        const insightsGrid = document.getElementById('insights-grid');
+        const insightsSection = document.getElementById('insights-section');
+        const recBox = document.getElementById('recommendation-box');
+        const recList = document.getElementById('recommendation-list');
+
+        // Extract customer data for insights
+        const customers = data.results.map(r => r.customer_data);
+        const total = customers.length;
+        const highRiskCustomers = data.results.filter(r => r.risk_level === 'High');
+        const highRiskCount = highRiskCustomers.length;
+
+        if (total > 0 && highRiskCount > 0) {
+            insightsSection.style.display = 'block';
+
+            // Calculate key metrics from the data
+            const monthToMonthCount = customers.filter(c => c?.Contract === 'Month-to-month').length;
+            const noSecurityCount = customers.filter(c => c?.OnlineSecurity === 'No').length;
+            const noTechSupportCount = customers.filter(c => c?.TechSupport === 'No').length;
+            const fiberOpticCount = customers.filter(c => c?.InternetService === 'Fiber optic').length;
+            const highChargesCount = customers.filter(c => (c?.MonthlyCharges || 0) > 70).length;
+            const lowTenureCount = customers.filter(c => (c?.tenure || 0) < 6).length;
+
+            // Build insights
+            let insights = [];
+
+            // Top insight: Contract type
+            if (monthToMonthCount > 0) {
+                const pct = Math.round((monthToMonthCount / total) * 100);
+                insights.push({
+                    icon: '📄',
+                    text: `<span class="highlight">${monthToMonthCount}</span> customers (${pct}%) have <span class="highlight-danger">Month-to-month</span> contracts — the highest risk factor`
+                });
+            }
+
+            // Online Security
+            if (noSecurityCount > 0) {
+                const pct = Math.round((noSecurityCount / total) * 100);
+                insights.push({
+                    icon: '🔒',
+                    text: `<span class="highlight">${noSecurityCount}</span> customers (${pct}%) have <span class="highlight-danger">no Online Security</span> — key churn indicator`
+                });
+            }
+
+            // Tech Support
+            if (noTechSupportCount > 0) {
+                const pct = Math.round((noTechSupportCount / total) * 100);
+                insights.push({
+                    icon: '🛠️',
+                    text: `<span class="highlight">${noTechSupportCount}</span> customers (${pct}%) lack <span class="highlight-danger">Tech Support</span>`
+                });
+            }
+
+            // Fiber optic
+            if (fiberOpticCount > 0) {
+                const pct = Math.round((fiberOpticCount / total) * 100);
+                insights.push({
+                    icon: '🌐',
+                    text: `<span class="highlight">${fiberOpticCount}</span> customers (${pct}%) have <span class="highlight-danger">Fiber optic</span> internet (higher churn than DSL)`
+                });
+            }
+
+            // High monthly charges
+            if (highChargesCount > 0) {
+                const pct = Math.round((highChargesCount / total) * 100);
+                insights.push({
+                    icon: '💰',
+                    text: `<span class="highlight">${highChargesCount}</span> customers (${pct}%) pay <span class="highlight-danger">over $70/month</span>`
+                });
+            }
+
+            // Low tenure
+            if (lowTenureCount > 0) {
+                const pct = Math.round((lowTenureCount / total) * 100);
+                insights.push({
+                    icon: '⏰',
+                    text: `<span class="highlight">${lowTenureCount}</span> customers (${pct}%) have <span class="highlight-danger">less than 6 months</span> tenure`
+                });
+            }
+
+            // If no specific insights, show a general one
+            if (insights.length === 0) {
+                insights.push({
+                    icon: '📊',
+                    text: `<span class="highlight">${highRiskCount}</span> customers (${Math.round((highRiskCount/total)*100)}%) are at <span class="highlight-danger">High Risk</span>`
+                });
+            }
+
+            // Limit to top 5 insights
+            insights = insights.slice(0, 5);
+
+            // Render insights
+            insightsGrid.innerHTML = insights.map(i =>
+                `<div class="insight-item"><span class="emoji">${i.icon}</span> ${i.text}</div>`
+            ).join('');
+
+            // Recommendations
+            recBox.style.display = 'block';
+            const recommendations = [];
+            if (monthToMonthCount > 0) {
+                recommendations.push('Offer 12-month contract discounts to month-to-month customers');
+            }
+            if (noSecurityCount > 0) {
+                recommendations.push('Provide free Online Security add-on trials for 3 months');
+            }
+            if (noTechSupportCount > 0) {
+                recommendations.push('Promote Tech Support as a retention tool');
+            }
+            if (fiberOpticCount > 0 && highChargesCount > 0) {
+                recommendations.push('Target Fiber optic customers with plan optimization offers');
+            }
+            if (lowTenureCount > 0) {
+                recommendations.push('Send welcome engagement series to new customers (<6 months)');
+            }
+            if (highRiskCount > 0) {
+                recommendations.push(`Prioritize outreach to ${highRiskCount} high-risk customers with personalized retention offers`);
+            }
+            if (recommendations.length === 0) {
+                recommendations.push('Send general satisfaction surveys to all customers');
+            }
+
+            recList.innerHTML = recommendations.map(r =>
+                `<li>${r}</li>`
+            ).join('');
+
+        } else {
+            insightsSection.style.display = 'none';
+            recBox.style.display = 'none';
+        }
+
+    } catch (err) {
+        console.error('Error:', err);
+        errorEl.textContent = '❌ ' + err.message;
+        errorEl.style.display = 'block';
+        document.getElementById('batch-results').classList.remove('active');
+    }
+}
 </script>
+
 </body>
 </html>
